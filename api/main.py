@@ -42,7 +42,7 @@ def comments(id: int, commentid: int):
     return {f"Profile page for user Id: {id} and comment: {commentid}"}
 
 
-@app.post("/products")
-def create_product(product: Product):
+@app.post("/products/{id}")
+def create_product(product: Product, id: str, category: str):
     product.discounted_price = product.price - (product.price * product.discount) / 100
-    return product
+    return {"id": id, "product": product, "category": category}
