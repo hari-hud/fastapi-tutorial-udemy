@@ -4,9 +4,11 @@ from typing import Set, List, Union
 
 app = FastAPI()
 
+
 class Image(BaseModel):
     url: HttpUrl
     name: str
+
 
 class Product(BaseModel):
     name: str
@@ -20,11 +22,25 @@ class Product(BaseModel):
     tags: Set[str] = []
     image: List[Image]
 
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "name": "phone",
+                "price": 100,
+                "discount": 10,
+                "discounted_price": 0,
+                "tags": ["electronics", "computers"],
+                "image": [{"url": "http://image1", "name": "img1"}],
+            }
+        }
+
+
 class Offer(BaseModel):
     name: str
     desc: str
     price: float
-    products: List[Product] 
+    products: List[Product]
+
 
 class User(BaseModel):
     name: str
@@ -64,8 +80,7 @@ def comments(id: int, commentid: int):
 
 @app.post("/products/{id}")
 def create_product(product: Product, id: str, category: str):
-    product.discounted_price = product.price - \
-        (product.price * product.discount) / 100
+    product.discounted_price = product.price - (product.price * product.discount) / 100
     return {"id": id, "product": product, "category": category}
 
 
@@ -74,6 +89,7 @@ def create_product(product: Product, id: str, category: str):
 def create_product(product: Product, user: User):
     return {"product": product, "user": user}
 
-@app.post('/addoffer')
+
+@app.post("/addoffer")
 def addoffer(offer: Offer):
     return offer
