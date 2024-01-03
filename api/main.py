@@ -1,14 +1,23 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 app = FastAPI()
 
 
 class Product(BaseModel):
     name: str
-    price: float
+    price: float = Field(
+        title="Price of the item",
+        description="This would be the price of  the item beiung added",
+        gt=0,
+    )
     discount: int
     discounted_price: float
+
+
+class User(BaseModel):
+    name: str
+    email: str
 
 
 @app.get(path="/")
@@ -44,5 +53,12 @@ def comments(id: int, commentid: int):
 
 @app.post("/products/{id}")
 def create_product(product: Product, id: str, category: str):
-    product.discounted_price = product.price - (product.price * product.discount) / 100
+    product.discounted_price = product.price - \
+        (product.price * product.discount) / 100
     return {"id": id, "product": product, "category": category}
+
+
+# passing two models to same request
+@app.post("/purchase")
+def create_product(product: Product, user: User):
+    return {"product": product, "user": user}
