@@ -4,6 +4,9 @@ from typing import Set, List, Union
 
 app = FastAPI()
 
+class Image(BaseModel):
+    url: str
+    name: str
 
 class Product(BaseModel):
     name: str
@@ -15,6 +18,7 @@ class Product(BaseModel):
     discount: int
     discounted_price: float
     tags: Set[str] = []
+    image: Image
 
 
 class User(BaseModel):
