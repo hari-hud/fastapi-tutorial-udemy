@@ -18,8 +18,13 @@ class Product(BaseModel):
     discount: int
     discounted_price: float
     tags: Set[str] = []
-    image: Image
+    image: List[Image]
 
+class Offer(BaseModel):
+    name: str
+    desc: str
+    price: float
+    products: List[Product] 
 
 class User(BaseModel):
     name: str
@@ -68,3 +73,7 @@ def create_product(product: Product, id: str, category: str):
 @app.post("/purchase")
 def create_product(product: Product, user: User):
     return {"product": product, "user": user}
+
+@app.post('/addoffer')
+def addoffer(offer: Offer):
+    return offer
