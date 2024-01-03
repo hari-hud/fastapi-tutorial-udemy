@@ -7,6 +7,7 @@ from datetime import date, datetime, time, timedelta
 
 app = FastAPI()
 
+
 class Event(BaseModel):
     event_id: UUID
     start_date: date
@@ -14,6 +15,7 @@ class Event(BaseModel):
     end_time: datetime
     repeat_time: time
     execute_after: timedelta
+
 
 class Image(BaseModel):
     url: HttpUrl
@@ -29,7 +31,7 @@ class Product(BaseModel):
     )
     discount: int
     discounted_price: float
-    tags: Set[str] #= Field(examples="[electronic, phones]")
+    tags: Set[str]  # = Field(examples="[electronic, phones]")
     image: List[Image]
 
     # class Config:
@@ -104,10 +106,12 @@ def create_product(product: Product, user: User):
 def addoffer(offer: Offer):
     return offer
 
+
 @app.post("/event")
 def add_event(event: Event):
     return event
 
+
 @app.post("/login")
 def login(username: str = Form(...), password: str = Form(...)):
-    return {"username":    username}
+    return {"username": username}
