@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, HttpUrl
 from typing import Set, List, Union
 
 app = FastAPI()
 
 class Image(BaseModel):
-    url: str
+    url: HttpUrl
     name: str
 
 class Product(BaseModel):
