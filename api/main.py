@@ -110,4 +110,4 @@ def add_event(event: Event):
 
 @app.post("/login")
 def login(username: str = Form(...), password: str = Form(...)):
-    return {"username": username}
+    return {"username":    username}
