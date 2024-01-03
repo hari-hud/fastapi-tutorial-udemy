@@ -11,7 +11,7 @@ class Image(BaseModel):
 
 
 class Product(BaseModel):
-    name: str
+    name: str = Field(example="phone")
     price: float = Field(
         title="Price of the item",
         description="This would be the price of  the item beiung added",
@@ -19,20 +19,20 @@ class Product(BaseModel):
     )
     discount: int
     discounted_price: float
-    tags: Set[str] = []
+    tags: Set[str] = Field(examples="[electronic, phones]")
     image: List[Image]
 
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "name": "phone",
-                "price": 100,
-                "discount": 10,
-                "discounted_price": 0,
-                "tags": ["electronics", "computers"],
-                "image": [{"url": "http://image1", "name": "img1"}],
-            }
-        }
+    # class Config:
+    #     json_schema_extra = {
+    #         "example": {
+    #             "name": "phone",
+    #             "price": 100,
+    #             "discount": 10,
+    #             "discounted_price": 0,
+    #             "tags": ["electronics", "computers"],
+    #             "image": [{"url": "http://image1", "name": "img1"}],
+    #         }
+    #     }
 
 
 class Offer(BaseModel):
