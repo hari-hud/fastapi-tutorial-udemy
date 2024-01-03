@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 from pydantic import BaseModel, Field, HttpUrl
 from typing import Set, List, Union
 from uuid import UUID
 from datetime import date, datetime, time, timedelta
+
 
 app = FastAPI()
 
@@ -103,6 +104,10 @@ def create_product(product: Product, user: User):
 def addoffer(offer: Offer):
     return offer
 
-@app.post("/evant")
+@app.post("/event")
 def add_event(event: Event):
     return event
+
+@app.post("/login")
+def login(username: str = Form(...), password: str = Form(...)):
+    return {"username": username}
