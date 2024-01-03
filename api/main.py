@@ -1,9 +1,18 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, Field, HttpUrl
 from typing import Set, List, Union
+from uuid import UUID
+from datetime import date, datetime, time, timedelta
 
 app = FastAPI()
 
+class Event(BaseModel):
+    event_id: UUID
+    start_date: date
+    start_time: datetime
+    end_time: datetime
+    repeat_time: time
+    execute_after: timedelta
 
 class Image(BaseModel):
     url: HttpUrl
@@ -19,7 +28,7 @@ class Product(BaseModel):
     )
     discount: int
     discounted_price: float
-    tags: Set[str] = Field(examples="[electronic, phones]")
+    tags: Set[str] #= Field(examples="[electronic, phones]")
     image: List[Image]
 
     # class Config:
@@ -93,3 +102,7 @@ def create_product(product: Product, user: User):
 @app.post("/addoffer")
 def addoffer(offer: Offer):
     return offer
+
+@app.post("/evant")
+def add_event(event: Event):
+    return event
