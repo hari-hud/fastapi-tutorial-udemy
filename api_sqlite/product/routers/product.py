@@ -1,30 +1,20 @@
-from fastapi import FastAPI, status, HTTPException
+from fastapi import APIRouter, status, HTTPException
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
-import schema
-import models
-from database import engine, SessionLocal
+from api_sqlite.product.database import get_db
+from api_sqlite.product import models
+from api_sqlite.product import schema
 
-app = FastAPI()
-
-models.Base.metadata.create_all(engine)
+router = APIRouter(tags=["Products"], prefix="/products")
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-@app.get("/products")
+@router.get()
 def get_products(db: Session = Depends(get_db)):
     products = db.query(models.Product).all()
     return products
 
 
-@app.get("/products/{id}", response_model=schema.DisplayProduct)
+@router.get("/{id}", response_model=schema.DisplayProduct)
 def get_one_product(id, db: Session = Depends(get_db)):
     product = db.query(models.Product).filter(models.Product.id == id).first()
     if not product:
@@ -34,14 +24,14 @@ def get_one_product(id, db: Session = Depends(get_db)):
     return product
 
 
-@app.delete("/products/{id}")
+@router.delete("/{id}")
 def delete(id, db: Session = Depends(get_db)):
     db.query(models.Product).filter(models.Product.id == id).delete()
     db.commit()
     return {"Product deleted"}
 
 
-@app.put("/products/{id}")
+@router.put("/{id}")
 def update(id, request: schema.Product, db: Session = Depends(get_db)):
     product = db.query(models.Product).filter(models.Product.id == id)
     if not product.first():
@@ -52,10 +42,10 @@ def update(id, request: schema.Product, db: Session = Depends(get_db)):
     return {"Product updated"}
 
 
-@app.post("/product", status_code=status.HTTP_201_CREATED)
+@router.post(status_code=status.HTTP_201_CREATED, response_model=schema.DisplayProduct)
 def add(reqeust: schema.Product, db: Session = Depends(get_db)):
     new_product = models.Product(
-        name=reqeust.name, price=reqeust.price, desc=reqeust.desc
+        name=reqeust.name, price=reqeust.price, desc=reqeust.desc, seller_id=1
     )
     db.add(new_product)
     db.commit()
